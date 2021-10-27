@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/dec0deit/message-email-api#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "nodemailer": "^6.7.0"
   }
 }

@@ -1,15 +1,17 @@
 const express = require('express')
+const nodemailer = require("nodemailer");
 const app = express()
-app.get('/sendMessageAndEmail', (req, res) => {
+app.get('/sendMessageAndEmail', async(req, res) => {
   let testAccount = await nodemailer.createTestAccount();
 
   // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
+  let transporter = nodemailer.createTransport('SMTP',
+  {
     host: "smtp.ethereal.email",
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: testAccount.user, // generated ethereal user
+      user: 'wjasvblidrowq2g3@ethereal.email', // generated ethereal user
       pass: testAccount.pass, // generated ethereal password
     },
   });
@@ -22,6 +24,7 @@ app.get('/sendMessageAndEmail', (req, res) => {
     text: "Hello world?", // plain text body
     html: "<b>Hello world?</b>", // html body
   });
+  console.log(info)
 
   console.log("Message sent: %s", info.messageId);
   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
