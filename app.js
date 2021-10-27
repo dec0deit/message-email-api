@@ -3,11 +3,27 @@ require('dotenv').config()
 const express = require('express')
 const nodemailer = require("nodemailer");
 const bodyParser = require('body-parser')
+const fs = require("fs");
+const path = require("path");
 const app = express()
+const dirPath = path.join(__dirname, "public/pdfs");
 
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: false}))
-  
+
+const files = fs.readdirSync(dirPath).map(name => {
+  return {
+    url: `localhost:3000/pdfs/${name}`
+  };
+});
+
+app.set("view engine", "pdf");
+app.use(express.static("public"));
+
+app.get('/template',async(req,res)=>{
+  res.redirect(files[0].url);
+});
+
 app.post('/sendMessageAndEmail', async(req, res) => {
   console.log(req.body)
   const {email,phoneNo} =req.body;
@@ -16,6 +32,7 @@ app.post('/sendMessageAndEmail', async(req, res) => {
       let transporter = nodemailer.createTransport(
       {
         service:'gmail',
+        host: 'smtp.gmail.com',
         auth: {
           user: process.env.EMAIL,
           pass: process.env.PASSWORD,
