@@ -1,39 +1,37 @@
+require('dotenv').config()
 const express = require('express')
 const nodemailer = require("nodemailer");
 const app = express()
 app.get('/sendMessageAndEmail', async(req, res) => {
-  let testAccount = await nodemailer.createTestAccount();
-
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport('SMTP',
+  console.log(process.env.EMAIL,process.env.PASSWORD)
+ 
+  let transporter = nodemailer.createTransport(
   {
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false, // true for 465, false for other ports
+    service:'gmail',
     auth: {
-      user: 'wjasvblidrowq2g3@ethereal.email', // generated ethereal user
-      pass: testAccount.pass, // generated ethereal password
-    },
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD,
+    }
   });
+ 
+  try{
+    let info = await transporter.sendMail({
+      from: 'TEST EMAIL', // sender address
+      to: "singlanipun29@gmail.com", // list of receivers
+      subject: "Hello ✔", // Subject line
+      text: "Hello world?", // plain text body
+      html: "<b>Hello world?</b>", // html body
+    });
 
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: '"Fred Foo 👻" <foo@example.com>', // sender address
-    to: "singlanipun29@gmail.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>", // html body
-  });
-  console.log(info)
-
-  console.log("Message sent: %s", info.messageId);
-  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-  // Preview only available when sending through an Ethereal account
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-  res.status(200).json({
-      message:'Success'});
-
+    console.log(info)
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    res.status(200).json({message:'Success'});
+  }
+  catch(err){
+    console.log(err)
+    res.status(401).json({message : 'Bad Request'})
+  }
 })
 app.get('/', (req, res) => {
     res.status(200).json({
