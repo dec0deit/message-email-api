@@ -19,7 +19,6 @@ const files = fs.readdirSync(dirPath).map(name => {
 
 app.set("view engine", "pdf");
 app.use(express.static("public"));
-
 app.get('/template',async(req,res)=>{
   res.redirect(files[0].url);
 });
@@ -64,7 +63,15 @@ app.post('/sendMessageAndEmail', async(req, res) => {
   }
 })
 app.get('/', (req, res) => {
-    res.status(200).json({message:'Home Page'});
+  console.log(req);
+
+  res.status(200).json({message:'Home Page'});
+})
+
+app.get('/sumOfTwoNumber',(req,res) =>{
+  const {one,Two} = req.query;
+  console.log(req.params);
+  res.status(200).json({sum:one+Two});
 })
 
 const port = process.env.PORT || 3000;
