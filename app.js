@@ -9,7 +9,7 @@ const app = express()
 const dirPath = path.join(__dirname, "public/pdfs");
 
 app.use(bodyParser.json()) // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: false}))
+app.use(bodyParser.urlencoded({ extended: true}))
 
 const files = fs.readdirSync(dirPath).map(name => {
   return {
@@ -24,8 +24,8 @@ app.get('/template',async(req,res)=>{
 });
 
 app.post('/sendMessageAndEmail', async(req, res) => {
-  console.log(req.body)
-  const {email,phoneNo} =req.body;
+  console.log(req.body.transaction);
+  const {name,email_id,mobile_no} =req.body.transaction.customer;
   if(email && phoneNo){
       console.log(process.env.EMAIL,process.env.PASSWORD)
       let transporter = nodemailer.createTransport(
@@ -43,9 +43,9 @@ app.post('/sendMessageAndEmail', async(req, res) => {
       try{
         let info = await transporter.sendMail({
         from: 'TEST EMAIL',
-        to: [email,phoneNo], 
-        subject: "Hello ✔", 
-        text: "Hello world?", 
+        to: [email_id,mobile_no], 
+        subject: "Thanks For Donating", 
+        text: `Hello ${name} Thanks a lot for donating.`, 
         html: "<b>Hello world?</b>", 
         });
         console.log(info)
@@ -68,11 +68,6 @@ app.get('/', (req, res) => {
   res.status(200).json({message:'Home Page'});
 })
 
-app.get('/sumOfTwoNumber',(req,res) =>{
-  const {one,Two} = req.query;
-  console.log(req.params);
-  res.status(200).json({sum:one+Two});
-})
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
