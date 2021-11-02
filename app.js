@@ -24,7 +24,7 @@ app.get('/template',async(req,res)=>{
 });
 
 app.post('/sendMessageAndEmail', async(req, res) => {
-  console.log(req.body.transaction);
+  console.log(req.body);
   const {name,email_id,mobile_no} =req.body.transaction.customer;
   if(email && phoneNo){
       console.log(process.env.EMAIL,process.env.PASSWORD)
