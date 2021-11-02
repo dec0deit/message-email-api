@@ -7,9 +7,11 @@ const fs = require("fs");
 const path = require("path");
 const app = express()
 const dirPath = path.join(__dirname, "public/pdfs");
+const axios = require('axios')
 
-app.use(bodyParser.json()) // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true}))
+
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true}))
 
 const files = fs.readdirSync(dirPath).map(name => {
   return {
@@ -19,14 +21,18 @@ const files = fs.readdirSync(dirPath).map(name => {
 
 app.set("view engine", "pdf");
 app.use(express.static("public"));
-app.get('/template',async(req,res)=>{
-  res.redirect(files[0].url);
+app.get('/template',(req,res)=>{
+  console.log('hello')
+  res.download(dirPath+'/template.pdf');
 });
 
 app.post('/sendMessageAndEmail', async(req, res) => {
   console.log(req.body);
-  const {name,email_id,mobile_no} =req.body.transaction.customer;
-  if(email && phoneNo){
+  const name = 'hardik';
+  const email_id = 'singlanipun29@gmail.com';
+  const mobile_no = '+919306232064';
+  //const {name,email_id,mobile_no} =req.body.transaction.customer;
+  if(email_id && mobile_no){
       console.log(process.env.EMAIL,process.env.PASSWORD)
       let transporter = nodemailer.createTransport(
       {
@@ -39,18 +45,32 @@ app.post('/sendMessageAndEmail', async(req, res) => {
         tls :{
           rejectUnauthorized : false
         }
+
       });
       try{
         let info = await transporter.sendMail({
-        from: 'TEST EMAIL',
-        to: [email_id,mobile_no], 
-        subject: "Thanks For Donating", 
-        text: `Hello ${name} Thanks a lot for donating.`, 
-        html: "<b>Hello world?</b>", 
+          from: process.env.EMAIL,
+          to: [email_id], 
+          subject: "Thanks For Donating", 
+          text: `Hello ${name} Thanks a lot for donating.`, 
         });
         console.log(info)
         console.log("Message sent: %s", info.messageId);
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        
+        const headers = {
+          'Content-Type':'application/json',
+          'X-API-Key' : process.env.API_KEY
+        }
+
+        const body = {
+          'mobile' : mobile_no,
+          'text' : `Hello ${name} Thanks a lot for Donating`
+        }
+
+        const apiResponse = await axios.post('https://api.ycloud.com/v1/sms/send_messages',body,{headers});
+        
+        console.log(apiResponse.data);
         res.status(200).json({message:'Success'});
     }
     catch(err){
