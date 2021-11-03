@@ -28,10 +28,7 @@ app.get('/template',(req,res)=>{
 
 app.post('/sendMessageAndEmail', async(req, res) => {
   console.log(req.body);
-  const name = 'hardik';
-  const email_id = 'singlanipun29@gmail.com';
-  const mobile_no = '+919306232064';
-  //const {name,email_id,mobile_no} =req.body.transaction.customer;
+  const {name,email_id,mobile_no} =req.body.transaction.customer;
   if(email_id && mobile_no){
       console.log(process.env.EMAIL,process.env.PASSWORD)
       let transporter = nodemailer.createTransport(
