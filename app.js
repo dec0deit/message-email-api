@@ -5,6 +5,8 @@ const nodemailer = require("nodemailer");
 const bodyParser = require('body-parser')
 const fs = require("fs");
 const path = require("path");
+const pdf = require("html-pdf");
+const jwt = require('jsonwebtoken');
 const app = express()
 const dirPath = path.join(__dirname, "public/pdfs");
 const axios = require('axios')
@@ -19,7 +21,7 @@ const files = fs.readdirSync(dirPath).map(name => {
   };
 });
 
-app.set("view engine", "pdf");
+app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.get('/template',(req,res)=>{
   console.log('hello')
@@ -85,6 +87,32 @@ app.get('/', (req, res) => {
   res.status(200).json({message:'Home Page'});
 })
 
+app.get('/getCertificate', (req, res) => {
+
+  let donorInfo = {
+    Name : jwt.decode(req.query.Name),
+    Amount : jwt.decode(req.query.Amount),
+    Date : jwt.decode(req.query.Date)
+  }
+
+  res.render(__dirname + "/public/pdfGenerator.ejs", {DonorInfo: donorInfo}, (err, data) => {
+    var config = 
+    {
+      format: 'A5',
+      orientation: "landscape"
+    };
+
+    pdf.create(data, config).toFile(dirPath + "/receipt-donation.pdf", function (err, data) {
+      if (err) {
+        return res.send(err);
+      } 
+      else {
+        return res.download(dirPath + "/receipt-donation.pdf");
+      }
+    });
+  });
+
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

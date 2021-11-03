@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+  <script src = 'https://code.jquery.com/jquery-3.4.1.min.js'></script>
+  <style type="text/css">
+    img
+    {
+      height: 40%;
+    }
+    
+    #SSS
+    {
+      float: right;
+    }
+
+    .commonText
+    {
+      font-size: 1.5em;
+    }
+
+    body
+    {
+      background-image: url('https://message-email-api.herokuapp.com/public/static/bg-SSS.jpg');
+      background-size:     cover;
+      background-repeat:   no-repeat;
+      background-position: center;
+      font-family: Helvetica;  
+    }
+
+    .innerbox
+    {
+      margin: 5.5% 8% 0% 8%;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="innerbox">
+    <div>
+      <img id="SJM" src="https://message-email-api.herokuapp.com/public/static/logo-SJM.png">
+      <img id="SSS" src="https://message-email-api.herokuapp.com/public/static/logo-SSS.png">
+    </div>
+
+    <div style="padding-top: 5%;">
+      <h1 style="text-align: center; font-size: 3.5em;">धन्यवाद पत्र</h1>
+      <p style="text-align: center;" class="commonText">स्वदेशी शोध संस्थान के निर्माण कार्य हेतु अपना महत्वपूर्ण योगदान <br> देने के लिए धन्यवाद।</p>
+    </div>
+  
+    <div style="padding-top: 10%;">
+      <form>
+        <label id="Name" class="commonText" >दानकर्ता: <%= DonorInfo.Name %></label><br><br>
+        <label id="Amount" class="commonText">दान की राशी: ₹<%= DonorInfo.Amount %></label><br><br>
+        <label id="Date" class="commonText">दिनांक: <%= DonorInfo.Date %></label><br>
+      </form>
+    </div>
+  </div>
+  	
+</body>
+</html>
