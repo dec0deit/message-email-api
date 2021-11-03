@@ -61,7 +61,7 @@ app.post('/sendMessageAndEmail', async(req, res) => {
         }
 
         const body = {
-          'mobile' : mobile_no,
+          'mobile' : '+91'+mobile_no,
           'text' : `Hello ${name} Thanks a lot for Donating`
         }
 
