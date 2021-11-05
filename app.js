@@ -15,8 +15,8 @@ jwt.sign("AA","AAA")
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 
-// require the Twilio module and create a REST client
-// const client = require('twilio')(accountSid, authToken);
+//require the Twilio module and create a REST client
+const client = require('twilio')(accountSid, authToken);
 
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true}))
@@ -64,18 +64,18 @@ app.post('/sendMessageAndEmail',async(req, res) => {
         console.log("Message sent: %s", info.messageId);
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
       
-        // client.messages
-        // .create({
-        //   to: '+91' + mobile_no,
-        //   from: '+15306758417',
-        //   body: `Hello ${name} Thanks for donating. Please download your certificate at ${url} `,
-        // })
-        // .then(message =>{
-        //    console.log(message);
-        //    console.log(message.sid)
+        client.messages
+        .create({
+          to: '+91' + mobile_no,
+          from: '+15306758417',
+          body: `Hello ${name} Thanks for donating. Please download your certificate at ${url} `,
+        })
+        .then(message =>{
+           console.log(message);
+           console.log(message.sid)
            res.status(200).json({message:'Success'});
            
-        //});
+        });
     }
     catch(err){
       console.log(err)
