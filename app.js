@@ -65,18 +65,18 @@ app.post('/sendMessageAndEmail',async(req, res) => {
         console.log("Message sent: %s", info.messageId);
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
       
-        client.messages
-        .create({
-          to: '+91' + mobile_no,
-          from: '+15306758417',
-          body: `Hello ${name} Thanks for donating. Please download your certificate at ${url} `,
-        })
-        .then(message =>{
-           console.log(message);
-           console.log(message.sid)
+        // client.messages
+        // .create({
+        //   to: '+91' + mobile_no,
+        //   from: '+15306758417',
+        //   body: `Hello ${name} Thanks for donating. Please download your certificate at ${url} `,
+        // })
+        // .then(message =>{
+        //    console.log(message);
+        //    console.log(message.sid)
            res.status(200).json({message:'Success'});
            
-        });
+        //});
     }
     catch(err){
       console.log(err)
