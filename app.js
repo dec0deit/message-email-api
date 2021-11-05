@@ -4,12 +4,13 @@ const express = require('express')
 const nodemailer = require("nodemailer");
 const bodyParser = require('body-parser')
 const fs = require("fs");
+var html = fs.readFileSync('./temp.html', 'utf8');
 const path = require("path");
 const pdf = require("html-pdf");
 const jwt = require('jsonwebtoken');
 const app = express()
 const axios = require('axios')
-
+const dirPath = path.join(__dirname, "public/pdfs");
 jwt.sign("AA","AAA")
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -36,7 +37,7 @@ app.post('/sendMessageAndEmail',async(req, res) => {
   const date = req.body.transaction.date;
   const amount = req.body.transaction.order.gross_amount;
   const payment_id = req.body.transaction.payment_id;
-  const url = `${req.hostname+'/getCertificate?Name='+jwt.sign(name,process.env.KEY)+'&Amount='+jwt.sign(amount,process.env.KEY)+'&Date='+jwt.sign(date,process.env.KEY)}`;
+  const url = `${req.hostname+'/getCertificate?Name='+jwt.sign(name,process.env.KEY)+'&Amount='+jwt.sign(amount,process.env.KEY)+'&Date='+jwt.sign(date,process.env.KEY)+'&id='+jwt.sign(payment_id,process.env.KEY)}`;
   console.log(url)
   if(email_id && mobile_no){
       console.log(process.env.EMAIL,process.env.PASSWORD)
@@ -106,7 +107,9 @@ app.get('/getCertificate', (req, res) => {
       format: 'A5',
       orientation: "landscape"
     };
-
+    console.log(data)
+    console.log(html)
+    html = data;
     pdf.create(data, config).toFile(dirPath + "/receipt-donation.pdf", function (err, data) {
       if (err) {
         return res.send(err);
