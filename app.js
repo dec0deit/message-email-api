@@ -4,7 +4,6 @@ const express = require('express')
 const nodemailer = require("nodemailer");
 const bodyParser = require('body-parser')
 const fs = require("fs");
-var html = fs.readFileSync('./temp.html', 'utf8');
 const path = require("path");
 const pdf = require("html-pdf");
 const jwt = require('jsonwebtoken');
@@ -17,7 +16,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 
 // require the Twilio module and create a REST client
-const client = require('twilio')(accountSid, authToken);
+// const client = require('twilio')(accountSid, authToken);
 
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true}))
@@ -94,29 +93,34 @@ app.get('/', (req, res) => {
 })
 
 app.get('/getCertificate', (req, res) => {
-  console.log(req.query)
   let donorInfo = {
     Name : jwt.decode(req.query.Name),
     Amount : jwt.decode(req.query.Amount),
     Date : jwt.decode(req.query.Date)
   }
-  console.log(donorInfo);
+
   res.render(__dirname + "/public/pdfGenerator.ejs", {DonorInfo: donorInfo}, (err, data) => {
     var config = 
     {
       format: 'A5',
       orientation: "landscape"
     };
-    console.log(data)
-    console.log(html)
+    
     html = data;
     
-    pdf.create(data, config).toFile(dirPath + "/receipt-donation.pdf", function (err, data) {
+    pdf.create(data, config).toFile(dirPath + "/receipt-" + req.query.id + ".pdf", function (err, data) {
       if (err) {
         return res.send(err);
       } 
       else {
-        return res.download(dirPath + "/receipt-donation.pdf");
+        return res.download(dirPath + "/receipt-" + req.query.id + ".pdf", "receipt-donation.pdf", function(err) {
+          if (err) {
+            console.log(err);
+          }
+          fs.unlinkSync(dirPath + "/receipt-" + req.query.id + ".pdf", function(){
+              console.log("File was deleted");
+          });
+        });
       }
     });
   });
