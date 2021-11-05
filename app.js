@@ -99,7 +99,7 @@ app.get('/getCertificate', (req, res) => {
     Amount : jwt.decode(req.query.Amount),
     Date : jwt.decode(req.query.Date)
   }
-
+  console.log(donorInfo);
   res.render(__dirname + "/public/pdfGenerator.ejs", {DonorInfo: donorInfo}, (err, data) => {
     var config = 
     {
