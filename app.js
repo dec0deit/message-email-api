@@ -36,7 +36,7 @@ app.post('/sendMessageAndEmail',async(req, res) => {
   const date = req.body.transaction.date;
   const amount = req.body.transaction.order.gross_amount;
   const payment_id = req.body.transaction.payment_id;
-  const url = `${req.hostname+'/getCertificate?Name='+jwt.sign(name,process.env.KEY)+'&Amount='+jwt.sign(amount,process.env.KEY)+'Date='+jwt.sign(date,process.env.KEY)}`;
+  const url = `${req.hostname+'/getCertificate?Name='+jwt.sign(name,process.env.KEY)+'&Amount='+jwt.sign(amount,process.env.KEY)+'&Date='+jwt.sign(date,process.env.KEY)}`;
   console.log(url)
   if(email_id && mobile_no){
       console.log(process.env.EMAIL,process.env.PASSWORD)
