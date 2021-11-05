@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const express = require('express')
 const nodemailer = require("nodemailer");
+const nodeHtmlToImage = require('node-html-to-image');
 const bodyParser = require('body-parser')
 const fs = require("fs");
 const path = require("path");
@@ -9,7 +10,7 @@ const pdf = require("html-pdf");
 const jwt = require('jsonwebtoken');
 const app = express()
 const axios = require('axios')
-const dirPath = path.join(__dirname, "public/pdfs");
+const dirPath = path.join(__dirname, "public/receipts");
 jwt.sign("AA","AAA")
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -99,7 +100,7 @@ app.get('/getCertificate', (req, res) => {
     Date : jwt.decode(req.query.Date)
   }
 
-  res.render(__dirname + "/public/pdfGenerator.ejs", {DonorInfo: donorInfo});
+  // res.render(__dirname + "/public/pdfGenerator.ejs", {DonorInfo: donorInfo});
   // , (err, data) => {
   //   var config = 
   //   {
@@ -108,7 +109,18 @@ app.get('/getCertificate', (req, res) => {
   //   };
 
   //   html = data;
-    
+  res.render(__dirname + "/public/pdfGenerator.ejs", {DonorInfo: donorInfo}, (err, data) => {
+    // var config =
+    // {
+    //   format: 'A5',
+    //   orientation: "landscape"
+    // };
+
+    nodeHtmlToImage({
+    output: dirPath + "/receipt-" + req.query.id + ".png",
+    html: data
+    })
+    .then(() => res.download(dirPath + "/receipt-" + req.query.id + ".png")); 
   //   pdf.create(data, config).toFile(dirPath + "/receipt-" + req.query.id + ".pdf", function (err, data) {
   //     if (err) {
   //       return res.send(err);
@@ -126,6 +138,7 @@ app.get('/getCertificate', (req, res) => {
   //   });
   // });
 
+})
 });
   
 const port = process.env.PORT || 3000;
