@@ -14,11 +14,13 @@
 
     body
     {
-      background-image: url('https://message-email-api.herokuapp.com/static/receipt-bg.png');
-      background-size:     cover;
+      /* background-image: url('https://message-email-api.herokuapp.com/static/receipt-bg.png');
+      background-size:     contain;
       background-repeat:   no-repeat;
       background-position: center;
-      font-family: Helvetica;  
+      font-family: Helvetica;   */
+      border: 10px solid black;
+      /* border-image: url(https://message-email-api.herokuapp.com/static/border-image.png) 30; */
     }
 
     .innerbox
@@ -36,7 +38,7 @@
       <img id="SSS" src="https://message-email-api.herokuapp.com/static/logo-SSS.png">
     </div>
 
-    <div style="text-align:center; padding-top: 45%; font-size: 1.2em;">
+    <div style="text-align:center; padding-top: 50%; font-size: 1.1em;">
       <span style="float:left;"><%= DonorInfo.Name %></span>
       <span style="float:right;"><%= DonorInfo.Date %></span>
       <span>₹ <%= DonorInfo.Amount %></span>

@@ -106,13 +106,7 @@ app.get('/getCertificate', (req, res) => {
       format: 'A5',
       orientation: "landscape"
     };
-
-    // nodeHtmlToImage({
-    // output: dirPath + "/receipt-" + req.query.id + ".png",
-    // html: data,
-    // quality: 1000
-    // })
-    // .then(() => res.download(dirPath + "/receipt-" + req.query.id + ".png")); 
+    
     pdf.create(data, config).toFile(dirPath + "/receipt-" + req.query.id + ".pdf", function (err, data) {
       if (err) {
         return res.send(err);
