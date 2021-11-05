@@ -4,7 +4,7 @@
   <style type="text/css">
     img
     {
-      height: 20%;
+      height: 30%;
     }
     
     #SSS
@@ -12,14 +12,9 @@
       float: right;
     }
 
-    .commonText
-    {
-      font-size: 1.2em;
-    }
-
     body
     {
-      background-image: url('https://message-email-api.herokuapp.com/static/bg-sjm.jpg');
+      background-image: url('https://message-email-api.herokuapp.com/static/receipt-bg.png');
       background-size:     cover;
       background-repeat:   no-repeat;
       background-position: center;
@@ -28,7 +23,7 @@
 
     .innerbox
     {
-      margin: 6% 8% 0% 9%;
+      margin: 2% 2% 0% 2%;
     }
 
   </style>
@@ -36,22 +31,15 @@
 
 <body>
   <div class="innerbox">
-    <div>
+    <div style="padding-top: 1%;">
       <img id="SJM" src="https://message-email-api.herokuapp.com/static/logo-SJM.png">
       <img id="SSS" src="https://message-email-api.herokuapp.com/static/logo-SSS.png">
     </div>
 
-    <div style="padding-top: 5%;">
-      <h1 style="text-align: center; font-size: 3.5em;">धन्यवाद पत्र</h1>
-      <p style="text-align: center;" class="commonText">स्वदेशी शोध संस्थान के निर्माण कार्य हेतु अपना महत्वपूर्ण योगदान <br> देने के लिए धन्यवाद।</p>
-    </div>
-  
-    <div style="padding-top: 10%;">
-      <form>
-        <label id="Name" class="commonText" >दानकर्ता: <%= DonorInfo.Name %></label><br><br>
-        <label id="Amount" class="commonText">दान की राशी: ₹<%= DonorInfo.Amount %></label><br><br>
-        <label id="Date" class="commonText">दिनांक: <%= DonorInfo.Date %></label><br>
-      </form>
+    <div style="text-align:center; padding-top: 45%; font-size: 1.2em;">
+      <span style="float:left;"><%= DonorInfo.Name %></span>
+      <span style="float:right;"><%= DonorInfo.Date %></span>
+      <span>₹ <%= DonorInfo.Amount %></span>
     </div>
   </div>
   	

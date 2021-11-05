@@ -17,7 +17,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 
 //require the Twilio module and create a REST client
-const client = require('twilio')(accountSid, authToken);
+// const client = require('twilio')(accountSid, authToken);
 
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true}))
@@ -100,45 +100,37 @@ app.get('/getCertificate', (req, res) => {
     Date : jwt.decode(req.query.Date)
   }
 
-  // res.render(__dirname + "/public/pdfGenerator.ejs", {DonorInfo: donorInfo});
-  // , (err, data) => {
-  //   var config = 
-  //   {
-  //     format: 'A5',
-  //     orientation: "landscape"
-  //   };
-
-  //   html = data;
   res.render(__dirname + "/public/pdfGenerator.ejs", {DonorInfo: donorInfo}, (err, data) => {
-    // var config =
-    // {
-    //   format: 'A5',
-    //   orientation: "landscape"
-    // };
+    var config =
+    {
+      format: 'A5',
+      orientation: "landscape"
+    };
 
-    nodeHtmlToImage({
-    output: dirPath + "/receipt-" + req.query.id + ".png",
-    html: data
-    })
-    .then(() => res.download(dirPath + "/receipt-" + req.query.id + ".png")); 
-  //   pdf.create(data, config).toFile(dirPath + "/receipt-" + req.query.id + ".pdf", function (err, data) {
-  //     if (err) {
-  //       return res.send(err);
-  //     } 
-  //     else {
-  //       return res.download(dirPath + "/receipt-" + req.query.id + ".pdf", "receipt-donation.pdf", function(err) {
-  //         if (err) {
-  //           console.log(err);
-  //         }
-  //         fs.unlink(dirPath + "/receipt-" + req.query.id + ".pdf", function(){
-  //             console.log("File was deleted");
-  //         });
-  //       });
-  //     }
-  //   });
-  // });
+    // nodeHtmlToImage({
+    // output: dirPath + "/receipt-" + req.query.id + ".png",
+    // html: data,
+    // quality: 1000
+    // })
+    // .then(() => res.download(dirPath + "/receipt-" + req.query.id + ".png")); 
+    pdf.create(data, config).toFile(dirPath + "/receipt-" + req.query.id + ".pdf", function (err, data) {
+      if (err) {
+        return res.send(err);
+      } 
+      else {
+        return res.download(dirPath + "/receipt-" + req.query.id + ".pdf", "receipt-donation.pdf", function(err) {
+          if (err) {
+            console.log(err);
+          }
+          fs.unlink(dirPath + "/receipt-" + req.query.id + ".pdf", function(){
+              console.log("File was deleted");
+          });
+        });
+      }
+    });
+  });
 
-})
+
 });
   
 const port = process.env.PORT || 3000;
