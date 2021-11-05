@@ -11,6 +11,7 @@ const app = express()
 const axios = require('axios')
 
 jwt.sign("AA","AAA")
+
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 
@@ -19,8 +20,6 @@ const client = require('twilio')(accountSid, authToken);
 
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true}))
-
-
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -31,6 +30,7 @@ app.get('/template',(req,res)=>{
 
 app.post('/sendMessageAndEmail', async(req, res) => {
   console.log(req.body);
+  console.log(req);
   const {name,email_id,mobile_no} =(req.body?.transaction?.customer);
   const amount = req.body.gross_amount;
   if(email_id && mobile_no){
@@ -69,6 +69,7 @@ app.post('/sendMessageAndEmail', async(req, res) => {
            console.log(message);
            console.log(message.sid)
            res.status(200).json({message:'Success'});
+           
         });
     }
     catch(err){
@@ -87,6 +88,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/getCertificate', (req, res) => {
+
   console.log(req.query)
   let donorInfo = {
     Name : jwt.decode(req.query.Name),
