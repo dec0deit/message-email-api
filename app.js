@@ -32,7 +32,8 @@ app.post('/sendMessageAndEmail', async(req, res) => {
   console.log(req.body);
   console.log(req);
   const {name,email_id,mobile_no} =(req.body?.transaction?.customer);
-  const amount = req.body.gross_amount;
+  const date = req.body.transaction.date;
+  const amount = req.body.transaction.order.gross_amount;
   if(email_id && mobile_no){
       console.log(process.env.EMAIL,process.env.PASSWORD)
       let transporter = nodemailer.createTransport(
