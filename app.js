@@ -99,31 +99,32 @@ app.get('/getCertificate', (req, res) => {
     Date : jwt.decode(req.query.Date)
   }
 
-  res.render(__dirname + "/public/pdfGenerator.ejs", {DonorInfo: donorInfo}, (err, data) => {
-    var config = 
-    {
-      format: 'A5',
-      orientation: "landscape"
-    };
+  res.render(__dirname + "/public/pdfGenerator.ejs", {DonorInfo: donorInfo});
+  // , (err, data) => {
+  //   var config = 
+  //   {
+  //     format: 'A5',
+  //     orientation: "landscape"
+  //   };
 
-    html = data;
+  //   html = data;
     
-    pdf.create(data, config).toFile(dirPath + "/receipt-" + req.query.id + ".pdf", function (err, data) {
-      if (err) {
-        return res.send(err);
-      } 
-      else {
-        return res.download(dirPath + "/receipt-" + req.query.id + ".pdf", "receipt-donation.pdf", function(err) {
-          if (err) {
-            console.log(err);
-          }
-          fs.unlink(dirPath + "/receipt-" + req.query.id + ".pdf", function(){
-              console.log("File was deleted");
-          });
-        });
-      }
-    });
-  });
+  //   pdf.create(data, config).toFile(dirPath + "/receipt-" + req.query.id + ".pdf", function (err, data) {
+  //     if (err) {
+  //       return res.send(err);
+  //     } 
+  //     else {
+  //       return res.download(dirPath + "/receipt-" + req.query.id + ".pdf", "receipt-donation.pdf", function(err) {
+  //         if (err) {
+  //           console.log(err);
+  //         }
+  //         fs.unlink(dirPath + "/receipt-" + req.query.id + ".pdf", function(){
+  //             console.log("File was deleted");
+  //         });
+  //       });
+  //     }
+  //   });
+  // });
 
 });
   
