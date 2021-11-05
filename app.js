@@ -110,6 +110,7 @@ app.get('/getCertificate', (req, res) => {
     console.log(data)
     console.log(html)
     html = data;
+    
     pdf.create(data, config).toFile(dirPath + "/receipt-donation.pdf", function (err, data) {
       if (err) {
         return res.send(err);
