@@ -105,7 +105,7 @@ app.get('/getCertificate', (req, res) => {
       format: 'A5',
       orientation: "landscape"
     };
-    
+
     html = data;
     
     pdf.create(data, config).toFile(dirPath + "/receipt-" + req.query.id + ".pdf", function (err, data) {
@@ -117,7 +117,7 @@ app.get('/getCertificate', (req, res) => {
           if (err) {
             console.log(err);
           }
-          fs.unlinkSync(dirPath + "/receipt-" + req.query.id + ".pdf", function(){
+          fs.unlink(dirPath + "/receipt-" + req.query.id + ".pdf", function(){
               console.log("File was deleted");
           });
         });
