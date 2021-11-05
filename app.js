@@ -20,7 +20,7 @@ const client = require('twilio')(accountSid, authToken);
 
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true}))
-
+app.use(express.raw({ type: 'application/json' }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.get('/template',(req,res)=>{
@@ -28,12 +28,16 @@ app.get('/template',(req,res)=>{
   res.download(dirPath+'/template.pdf');
 });
 
-app.post('/sendMessageAndEmail', async(req, res) => {
+app.post('/sendMessageAndEmail',async(req, res) => {
   console.log(req.body);
-  console.log(req);
+
+  //console.log(req);
   const {name,email_id,mobile_no} =(req.body?.transaction?.customer);
   const date = req.body.transaction.date;
   const amount = req.body.transaction.order.gross_amount;
+  const payment_id = req.body.transaction.payment_id;
+  const url = `${req.hostname+'/getCertificate?Name='+jwt.sign(name,process.env.KEY)+'&Amount='+jwt.sign(amount,process.env.KEY)+'Date='+jwt.sign(date,process.env.KEY)}`;
+  console.log(url)
   if(email_id && mobile_no){
       console.log(process.env.EMAIL,process.env.PASSWORD)
       let transporter = nodemailer.createTransport(
@@ -54,7 +58,7 @@ app.post('/sendMessageAndEmail', async(req, res) => {
           from: process.env.EMAIL,
           to: [email_id], 
           subject: "Thanks For Donating", 
-          text: `Hello ${name} Thanks a lot for donating. Please download your certificate at `, 
+          text: `Hello ${name} Thanks a lot for donating. Please download your certificate at ${url}`, 
         });
         console.log(info)
         console.log("Message sent: %s", info.messageId);
@@ -64,7 +68,7 @@ app.post('/sendMessageAndEmail', async(req, res) => {
         .create({
           to: '+91' + mobile_no,
           from: '+15306758417',
-          body: `Hello ${name} Thanks for donating. Please download your certificate at  `,
+          body: `Hello ${name} Thanks for donating. Please download your certificate at ${url} `,
         })
         .then(message =>{
            console.log(message);
@@ -89,7 +93,6 @@ app.get('/', (req, res) => {
 })
 
 app.get('/getCertificate', (req, res) => {
-
   console.log(req.query)
   let donorInfo = {
     Name : jwt.decode(req.query.Name),
