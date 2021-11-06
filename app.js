@@ -34,7 +34,8 @@ app.post('/sendMessageAndEmail',async(req, res) => {
   //console.log(req);
   const {name,email_id,mobile_no} =(req.body?.transaction?.customer);
   const date = new Date(req.body.transaction.date*1000);
-  let dateString = date.getDate() + "-" + date.getMonth() + 1 + "-" + date.getFullYear();
+  let month = date.getMonth() + 1;
+  let dateString = date.getDate() + "-" + month + "-" + date.getFullYear();
   const amount = req.body.transaction.order.gross_amount;
   const payment_id = req.body.transaction.payment_id;
   const url = `${req.hostname+'/getCertificate?Name='+jwt.sign(name,process.env.KEY)+'&Amount='+jwt.sign(amount,process.env.KEY)+'&Date='+jwt.sign(dateString,process.env.KEY)+'&id='+payment_id}`;
@@ -59,7 +60,7 @@ app.post('/sendMessageAndEmail',async(req, res) => {
           from: process.env.EMAIL,
           to: [email_id], 
           subject: "Thanks For Donating", 
-          text: `नमस्कार ${name},\n\n स्वदेशी शोध संस्थान के निर्माण कार्य हेतु अपना महत्वपूर्ण योगदान देने के लिए धन्यवाद। Download Certificate: ${url}`, 
+          text: `नमस्कार ${name},\n\nस्वदेशी शोध संस्थान के निर्माण कार्य हेतु अपना महत्वपूर्ण योगदान देने के लिए धन्यवाद। Download Certificate: ${url}`, 
         });
         console.log(info)
         console.log("Message sent: %s", info.messageId);
