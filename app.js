@@ -66,18 +66,18 @@ app.post('/sendMessageAndEmail',async(req, res) => {
         console.log("Message sent: %s", info.messageId);
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
       
-        client.messages
-        .create({
-          to: '+91' + mobile_no,
-          from: '+15306758417',
-          body: `नमस्कार ${name},\n\nस्वदेशी शोध संस्थान के निर्माण कार्य हेतु अपना महत्वपूर्ण योगदान देने के लिए धन्यवाद। Download Certificate: ${url}`,
-        })
-        .then(message =>{
-           console.log(message);
-           console.log(message.sid)
+        // client.messages
+        // .create({
+        //   to: '+91' + mobile_no,
+        //   from: '+15306758417',
+        //   body: `नमस्कार ${name},\n\nस्वदेशी शोध संस्थान के निर्माण कार्य हेतु अपना महत्वपूर्ण योगदान देने के लिए धन्यवाद। Download Certificate: ${url}`,
+        // })
+        // .then(message =>{
+        //    console.log(message);
+        //    console.log(message.sid)
            res.status(200).json({message:'Success'});
            
-        });
+        //});
     }
     catch(err){
       console.log(err)
@@ -127,6 +127,21 @@ app.get('/getCertificate', (req, res) => {
 
 
 });
+
+
+// app.get('/testApi', async (req,res)=>{
+//   const data = require('./test.json')
+//   console.log(data)
+//   for(var i=0;i<200;i++){
+//     try{
+//       const res = await axios.get('https://message-email-api.herokuapp.com/',data);
+//       console.log(res.data)
+//     }
+//     catch(e){
+//       console.log(e);
+//     }
+//   }
+// })
   
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
