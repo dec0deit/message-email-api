@@ -11,7 +11,6 @@ const jwt = require('jsonwebtoken');
 const app = express()
 const axios = require('axios')
 const dirPath = path.join(__dirname, "public/receipts");
-jwt.sign("AA","AAA")
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -34,10 +33,11 @@ app.post('/sendMessageAndEmail',async(req, res) => {
 
   //console.log(req);
   const {name,email_id,mobile_no} =(req.body?.transaction?.customer);
-  const date = req.body.transaction.date;
+  const date = new Date(req.body.transaction.date*1000);
+  let dateString = date.getDate() + "-" + date.getMonth() + 1 + "-" + date.getFullYear();
   const amount = req.body.transaction.order.gross_amount;
   const payment_id = req.body.transaction.payment_id;
-  const url = `${req.hostname+'/getCertificate?Name='+jwt.sign(name,process.env.KEY)+'&Amount='+jwt.sign(amount,process.env.KEY)+'&Date='+jwt.sign(date,process.env.KEY)+'&id='+jwt.sign(payment_id,process.env.KEY)}`;
+  const url = `${req.hostname+'/getCertificate?Name='+jwt.sign(name,process.env.KEY)+'&Amount='+jwt.sign(amount,process.env.KEY)+'&Date='+jwt.sign(dateString,process.env.KEY)+'&id='+payment_id}`;
   console.log(url)
   if(email_id && mobile_no){
       console.log(process.env.EMAIL,process.env.PASSWORD)
@@ -59,7 +59,7 @@ app.post('/sendMessageAndEmail',async(req, res) => {
           from: process.env.EMAIL,
           to: [email_id], 
           subject: "Thanks For Donating", 
-          text: `Hello ${name} Thanks a lot for donating. Please download your certificate at ${url}`, 
+          text: `नमस्कार ${name},\n\n स्वदेशी शोध संस्थान के निर्माण कार्य हेतु अपना महत्वपूर्ण योगदान देने के लिए धन्यवाद। Download Certificate: ${url}`, 
         });
         console.log(info)
         console.log("Message sent: %s", info.messageId);
