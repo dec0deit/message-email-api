@@ -70,7 +70,7 @@ app.post('/sendMessageAndEmail',async(req, res) => {
         .create({
           to: '+91' + mobile_no,
           from: '+15306758417',
-          body: `Hello ${name} Thanks for donating. Please download your certificate at ${url} `,
+          body: `नमस्कार ${name},\n\nस्वदेशी शोध संस्थान के निर्माण कार्य हेतु अपना महत्वपूर्ण योगदान देने के लिए धन्यवाद। Download Certificate: ${url}`,
         })
         .then(message =>{
            console.log(message);
