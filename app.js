@@ -29,7 +29,7 @@ app.get('/template',(req,res)=>{
 });
 
 app.post('/sendMessageAndEmail',async(req, res) => {
-  console.log(req.body);
+  console.l 
 
   //console.log(req);
   const {name,email_id,mobile_no} =(req.body?.transaction?.customer);
